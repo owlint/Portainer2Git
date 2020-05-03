@@ -15,6 +15,10 @@ from web.api.endpoints import (
     CreateStack,
     RemoveStack,
 )
+from infrastructure.application_services.application_services import (
+    ApplicationServices,
+)
+import settings
 
 
 def can_connect_services() -> bool:
@@ -43,6 +47,20 @@ def check_requirements() -> None:
             "Cannot connect to system services. Quitting..."
         )
         sys.exit(1)
+
+
+def check_portainers():
+    portainer_ids = (
+        Persistance.portainer_check_time_view().portainer_ids_to_check()
+    )
+    for portainer_id in portainer_ids:
+        try:
+            Services.logger().info(f"Checking {portainer_id}")
+            ApplicationServices.portainer().sync_portainer(
+                portainer_id, "resources/portainers"
+            )
+        except Exception as e:
+            Services.logger().error(f"Error checking {portainer_id}: {e}")
 
 
 def create_app() -> falcon.API:
@@ -74,9 +92,19 @@ def instantiate_domain_event_listeners() -> None:
     return listeners
 
 
+def instantiate_app_scheduler():
+    app_scheduler = Services.app_scheduler()
+    app_scheduler.add_job(
+        check_portainers, "interval", seconds=settings.NEXT_CHECK_INTERVAL
+    )
+    app_scheduler.start()
+    return app_scheduler
+
+
 check_requirements()
 migrate.apply()
 seed.apply()
 projections = instantiate_projections()
 domain_event_listeners = instantiate_domain_event_listeners()
+app_scheduler = instantiate_app_scheduler()
 application = create_app()

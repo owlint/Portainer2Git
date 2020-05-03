@@ -3,6 +3,7 @@ activity.log
 *.code-workspace
 .vscode
 .env
+resources/portainers
 
 celerybeat-schedule
 ghostdriver.log

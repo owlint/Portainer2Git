@@ -5,10 +5,12 @@ from pymongo import MongoClient
 from python_ddd.eventsourcing.DomainEventListener import (
     ApplicationDomainEventPublisher,
 )
+from infrastructure.services.PortainerService import PortainerService
 
 # Application
 import settings
 from infrastructure.services.logger import logger
+from infrastructure.services.AnsibleVaultService import AnsibleVaultService
 
 
 class Services(containers.DeclarativeContainer):
@@ -17,6 +19,8 @@ class Services(containers.DeclarativeContainer):
     domain_event_publisher = providers.Factory(ApplicationDomainEventPublisher)
     logger = providers.Singleton(logger)
     app_scheduler = providers.Singleton(BackgroundScheduler)
+    portainer = providers.Singleton(PortainerService)
+    ansible = providers.Singleton(AnsibleVaultService, settings.VAULT_PASSWORD)
     mongo_client = providers.Singleton(
         MongoClient,
         settings.mongo_url(),

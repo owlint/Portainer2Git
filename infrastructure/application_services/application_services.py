@@ -13,5 +13,7 @@ class ApplicationServices(containers.DeclarativeContainer):
         PortainerApplicationService,
         Persistance.portainer_repository,
         Persistance.portainer_name_view,
+        Services.portainer,
+        Services.ansible,
         Services.logger,
     )

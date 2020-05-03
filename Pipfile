@@ -19,6 +19,8 @@ pyyaml = "*"
 falcon = "*"
 validators = "*"
 jsonschema = "*"
+requests = "*"
+ansible-vault = "*"
 
 [dev-packages]
 rope = "*"
