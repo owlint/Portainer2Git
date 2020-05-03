@@ -1,7 +1,7 @@
 from python_ddd.eventsourcing.DomainObject import DomainObject
 import datetime
 import validators
-from settings import NEXT_CHECK_INTERVAL
+from settings import PORTAINER_VALIDITY_TIMEOUT
 from domain.Portainer.Stack import Stack
 from copy import deepcopy
 
@@ -56,7 +56,7 @@ class Portainer(DomainObject):
         """Prepare next check."""
         self.mutate(
             "next_check_changed",
-            datetime.datetime.now().timestamp() + NEXT_CHECK_INTERVAL,
+            datetime.datetime.now().timestamp() + PORTAINER_VALIDITY_TIMEOUT,
         )
 
     def add_stack(self, stack_name: str):

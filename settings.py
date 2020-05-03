@@ -4,7 +4,9 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-NEXT_CHECK_INTERVAL = int(os.getenv("NEXT_CHECK_INTERVAL", 10))
+NEXT_CHECK_INTERVAL = int(os.getenv("NEXT_CHECK_INTERVAL", 30))
+PORTAINER_VALIDITY_TIMEOUT = int(os.getenv("PORTAINER_VALIDITY_TIMEOUT", 120))
+VAULT_PASSWORD = os.environ["VAULT_PASSWORD"]
 
 
 def dev():

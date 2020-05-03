@@ -70,7 +70,8 @@ def test_prepare_check():
     assert (
         before
         <= portainer.next_check
-        <= datetime.datetime.now().timestamp() + settings.NEXT_CHECK_INTERVAL
+        <= datetime.datetime.now().timestamp()
+        + settings.PORTAINER_VALIDITY_TIMEOUT
     )
 
 
