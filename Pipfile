@@ -17,6 +17,7 @@ gunicorn = "*"
 pygrate = "==0.0.3"
 pyyaml = "*"
 falcon = "*"
+validators = "*"
 
 [dev-packages]
 rope = "*"

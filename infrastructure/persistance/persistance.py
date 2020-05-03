@@ -5,8 +5,8 @@ from dependency_injector import containers, providers
 from infrastructure.persistance.projections.ExampleProjection import (
     ExampleProjection,
 )
-from infrastructure.persistance.repositories.UserRepository import (
-    UserRepository,
+from infrastructure.persistance.repositories.PortainerRepository import (
+    PortainerRepository,
 )
 from infrastructure.persistance.views.ExampleView import ExampleView
 from infrastructure.services.services import Services
@@ -16,7 +16,9 @@ class Persistance(containers.DeclarativeContainer):
     """Application IoC container."""
 
     # Repositories
-    user_repository = providers.Factory(UserRepository, Services.mongo_client)
+    user_repository = providers.Factory(
+        PortainerRepository, Services.mongo_client
+    )
 
     # Projections
     example_projection = providers.Singleton(
