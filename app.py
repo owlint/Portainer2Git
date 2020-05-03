@@ -9,7 +9,12 @@ from infrastructure.domain_event_listeners.domain_event_listeners import (
 from infrastructure.persistance.persistance import Persistance
 from infrastructure.services.services import Services
 from utils.startup_checker import can_connect_mongo
-from web.api.endpoints import Healthcheck
+from web.api.endpoints import (
+    Healthcheck,
+    CreatePortainer,
+    CreateStack,
+    RemoveStack,
+)
 
 
 def can_connect_services() -> bool:
@@ -46,6 +51,9 @@ def create_app() -> falcon.API:
 
     app = falcon.API()
     app.add_route("/healthcheck", Healthcheck())
+    app.add_route("/portainer", CreatePortainer())
+    app.add_route("/portainer/stack/create", CreateStack())
+    app.add_route("/portainer/stack/remove", RemoveStack())
 
     return app
 

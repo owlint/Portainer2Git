@@ -7,7 +7,7 @@ from copy import deepcopy
 
 
 class Portainer(DomainObject):
-    def __init__(self, name: str, endpoint: str):
+    def __init__(self, name: str, endpoint: str, username: str, password: str):
         super().__init__()
 
         assert validators.url(
@@ -17,11 +17,15 @@ class Portainer(DomainObject):
         self.__name = None
         self.__endpoint = None
         self.__next_check = None
+        self.__username = None
+        self.__password = None
         self.__stacks = {}
 
         self.mutate("name_changed", name)
         self.mutate("endpoint_changed", endpoint)
         self.mutate("next_check_changed", datetime.datetime.now().timestamp())
+        self.mutate("username_changed", username)
+        self.mutate("password_changed", password)
 
     @property
     def name(self) -> str:
@@ -37,6 +41,16 @@ class Portainer(DomainObject):
     def next_check(self) -> float:
         """Next check for this portainer."""
         return self.__next_check
+
+    @property
+    def username(self) -> str:
+        """Username for portainer connection."""
+        return self.__username
+
+    @property
+    def password(self) -> str:
+        """Password for portainer connection."""
+        return self.__password
 
     def prepare_check(self):
         """Prepare next check."""
@@ -77,3 +91,9 @@ class Portainer(DomainObject):
 
     def on_stack_removed(self, stack_name: str):  # noqa: D102
         del self.__stacks[stack_name]
+
+    def on_username_changed(self, username: str):  # noqa: D102
+        self.__username = username
+
+    def on_password_changed(self, password: str):  # noqa: D102
+        self.__password = password

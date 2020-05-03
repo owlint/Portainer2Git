@@ -5,23 +5,29 @@ from domain.Portainer.Stack import Stack
 
 
 def test_creation():
-    portainer: Portainer = Portainer("prod", "https://portainer.com:5000")
+    portainer: Portainer = Portainer(
+        "prod", "https://portainer.com:5000", "username", "password"
+    )
 
     assert portainer.name == "prod"
     assert portainer.endpoint == "https://portainer.com:5000"
     assert portainer.next_check <= datetime.datetime.now().timestamp()
+    assert portainer.username == "username"
+    assert portainer.password == "password"
 
 
 def test_invalid_endpoint():
     try:
-        Portainer("prod", "https://portainer:5000")
+        Portainer("prod", "https://portainer:5000", "username", "password")
         assert False
     except AssertionError:
         assert True
 
 
 def test_name_immutable():
-    portainer: Portainer = Portainer("prod", "https://portainer.com:5000")
+    portainer: Portainer = Portainer(
+        "prod", "https://portainer.com:5000", "username", "password"
+    )
 
     try:
         portainer.name = "preprod"
@@ -31,7 +37,9 @@ def test_name_immutable():
 
 
 def test_endpoint_immutable():
-    portainer: Portainer = Portainer("prod", "https://portainer.com:5000")
+    portainer: Portainer = Portainer(
+        "prod", "https://portainer.com:5000", "username", "password"
+    )
 
     try:
         portainer.endpoint = "https://portainer.com:6000"
@@ -41,7 +49,9 @@ def test_endpoint_immutable():
 
 
 def test_next_check_property_immutable():
-    portainer: Portainer = Portainer("prod", "https://portainer.com:5000")
+    portainer: Portainer = Portainer(
+        "prod", "https://portainer.com:5000", "username", "password"
+    )
 
     try:
         portainer.next_check = 3
@@ -51,7 +61,9 @@ def test_next_check_property_immutable():
 
 
 def test_prepare_check():
-    portainer: Portainer = Portainer("prod", "https://portainer.com:5000")
+    portainer: Portainer = Portainer(
+        "prod", "https://portainer.com:5000", "username", "password"
+    )
     before = datetime.datetime.now().timestamp()
     portainer.prepare_check()
 
@@ -63,7 +75,9 @@ def test_prepare_check():
 
 
 def test_add_stack():
-    portainer: Portainer = Portainer("prod", "https://portainer.com:5000")
+    portainer: Portainer = Portainer(
+        "prod", "https://portainer.com:5000", "username", "password"
+    )
     portainer.add_stack("nginx")
 
     assert len(portainer.stacks) == 1
@@ -72,7 +86,9 @@ def test_add_stack():
 
 
 def test_add_stack_duplicate():
-    portainer: Portainer = Portainer("prod", "https://portainer.com:5000")
+    portainer: Portainer = Portainer(
+        "prod", "https://portainer.com:5000", "username", "password"
+    )
     portainer.add_stack("nginx")
 
     try:
@@ -83,7 +99,9 @@ def test_add_stack_duplicate():
 
 
 def test_remove_stack():
-    portainer: Portainer = Portainer("prod", "https://portainer.com:5000")
+    portainer: Portainer = Portainer(
+        "prod", "https://portainer.com:5000", "username", "password"
+    )
     portainer.add_stack("nginx")
     portainer.remove_stack("nginx")
 
@@ -91,7 +109,9 @@ def test_remove_stack():
 
 
 def test_remove_stack_not_exists():
-    portainer: Portainer = Portainer("prod", "https://portainer.com:5000")
+    portainer: Portainer = Portainer(
+        "prod", "https://portainer.com:5000", "username", "password"
+    )
 
     try:
         portainer.remove_stack("nginx")

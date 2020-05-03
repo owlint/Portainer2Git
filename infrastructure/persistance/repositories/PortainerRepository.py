@@ -12,4 +12,4 @@ class PortainerRepository(MongoEventSourceRepository):
         super().__init__(client, database="portainer2git")
 
     def create_blank_domain_object(self):
-        return Portainer("local", "http://test.com")
+        return Portainer("local", "http://test.com", "username", "password")
