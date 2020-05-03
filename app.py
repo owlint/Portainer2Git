@@ -1,17 +1,15 @@
-import logging
 import sys
 
-from flask import Flask
-from flask_restful import Api
+import falcon
+from pygrate import migrate, seed
 
-from web.api.endpoints import CreateUser
-from infrastructure.services.services import Services
-from infrastructure.persistance.persistance import Persistance
 from infrastructure.domain_event_listeners.domain_event_listeners import (
     DomainEventListeners,
 )
-from infrastructure.services.logger import InterceptHandler
+from infrastructure.persistance.persistance import Persistance
+from infrastructure.services.services import Services
 from utils.startup_checker import can_connect_mongo
+from web.api.endpoints import Healthcheck
 
 
 def can_connect_services() -> bool:
@@ -42,16 +40,12 @@ def check_requirements() -> None:
         sys.exit(1)
 
 
-def create_app() -> Flask:
+def create_app() -> falcon.API:
     """Create the flask application."""
     Services.logger().info("Starting User Manager")
 
-    app = Flask(__name__)
-    log = logging.getLogger("werkzeug")
-    log.addHandler(InterceptHandler())
-
-    api = Api(app)
-    api.add_resource(CreateUser, "/user/create")
+    app = falcon.API()
+    app.add_route("/healthcheck", Healthcheck())
 
     return app
 
@@ -72,9 +66,9 @@ def instantiate_domain_event_listeners() -> None:
     return listeners
 
 
-if __name__ == "__main__":
-    check_requirements()
-    projections = instantiate_projections()
-    domain_event_listeners = instantiate_domain_event_listeners()
-    app = create_app()
-    app.run(host="0.0.0.0", port=5000)
+check_requirements()
+migrate.apply()
+seed.apply()
+projections = instantiate_projections()
+domain_event_listeners = instantiate_domain_event_listeners()
+application = create_app()
