@@ -1,0 +1,24 @@
+-   repo: local
+    hooks:
+    -   id: dependencies
+        name: Freeze dependencies
+        entry: ./scripting/freeze_deps.sh
+        log_file: requirements.txt
+        always_run: true
+        pass_filenames: false
+        language: system
+        types: [python] 
+    -   id: tests
+        name: Run tests
+        entry: pipenv run python3 -m pytest -v tests
+        always_run: true
+        pass_filenames: false
+        language: system
+        types: [python]
+    -   id: no-dead-code
+        name: Check for dead code
+        entry: pipenv run vulture --min-confidence 100 --exclude .ropeproject,tests . 
+        always_run: true
+        pass_filenames: false
+        language: system
+        types: [python]
