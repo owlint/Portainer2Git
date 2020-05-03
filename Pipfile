@@ -1,5 +1,5 @@
 [[source]]
-url = "http://git.fenrys.io:3141/root/pypi/+simple"
+url = "https://pypi.org/simple"
 verify_ssl = false
 name = "pypi"
 
