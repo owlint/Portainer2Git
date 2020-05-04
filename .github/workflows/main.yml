@@ -23,6 +23,7 @@ jobs:
         run: |
           pip install pytest
           export VAULT_PASSWORD=test
+          export REMOTE_REPOSITORY=test
           python -m pytest -v
   push_to_registry:
     name: Push Docker image to Docker Hub
