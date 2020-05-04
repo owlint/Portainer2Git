@@ -19,6 +19,7 @@ from infrastructure.application_services.application_services import (
     ApplicationServices,
 )
 import settings
+import os
 
 
 def can_connect_services() -> bool:
@@ -57,8 +58,9 @@ def check_portainers():
         try:
             Services.logger().info(f"Checking {portainer_id}")
             ApplicationServices.portainer().sync_portainer(
-                portainer_id, "resources/portainers"
+                portainer_id, settings.LOCAL_REPOSITORY
             )
+            Services.git().commit_and_push()
         except Exception as e:
             Services.logger().error(f"Error checking {portainer_id}: {e}")
 
@@ -101,10 +103,16 @@ def instantiate_app_scheduler():
     return app_scheduler
 
 
+def initialize_repository():
+    if not os.path.exists(settings.LOCAL_REPOSITORY):
+        Services.git().clone_repo()
+
+
 check_requirements()
 migrate.apply()
 seed.apply()
 projections = instantiate_projections()
 domain_event_listeners = instantiate_domain_event_listeners()
+initialize_repository()
 app_scheduler = instantiate_app_scheduler()
 application = create_app()

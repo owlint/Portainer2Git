@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 ADD . /app
 
+# Install global dependencies
+RUN apt-get update && apt-get install -y git
+
 # Install build dependencies
 RUN apt-get update && apt-get install -y build-essential
 
@@ -21,6 +24,13 @@ RUN rm -r /root/.cache/pip
 EXPOSE 5000
 
 # Define environment variable
+ENV GIT_USERNAME="ops"
+ENV GIT_EMAIL="ops@compagny.com"
+ENV NEXT_CHECK_INTERVAL=30
+ENV PORTAINER_VALIDITY_TIMEOUT=120
+ENV REPOSITORY_BRANCH="master"
+ENV LOCAL_REPOSITORY="resources/portainers"
+
 
 # Run app.py when the container launches
-CMD ["gunicorn", "--bind=0.0.0.0:5000", "app"]
+CMD ["./start.sh"]

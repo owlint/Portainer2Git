@@ -11,6 +11,7 @@ from infrastructure.services.PortainerService import PortainerService
 import settings
 from infrastructure.services.logger import logger
 from infrastructure.services.AnsibleVaultService import AnsibleVaultService
+from infrastructure.services.GitService import GitService
 
 
 class Services(containers.DeclarativeContainer):
@@ -21,6 +22,13 @@ class Services(containers.DeclarativeContainer):
     app_scheduler = providers.Singleton(BackgroundScheduler)
     portainer = providers.Singleton(PortainerService)
     ansible = providers.Singleton(AnsibleVaultService, settings.VAULT_PASSWORD)
+    git = providers.Singleton(
+        GitService,
+        settings.REMOTE_REPOSITORY,
+        settings.LOCAL_REPOSITORY,
+        settings.REPOSITORY_BRANCH,
+        logger,
+    )
     mongo_client = providers.Singleton(
         MongoClient,
         settings.mongo_url(),

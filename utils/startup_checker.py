@@ -15,7 +15,7 @@ def can_connect_mongo() -> bool:
 
     """
     try:
-        database = "fenrys"
+        database = "portainer2git"
         collection = "event_store"
         collection = MongoClient(
             host=settings.mongo_url(),

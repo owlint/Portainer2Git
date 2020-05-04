@@ -7,6 +7,9 @@ load_dotenv(find_dotenv())
 NEXT_CHECK_INTERVAL = int(os.getenv("NEXT_CHECK_INTERVAL", 30))
 PORTAINER_VALIDITY_TIMEOUT = int(os.getenv("PORTAINER_VALIDITY_TIMEOUT", 120))
 VAULT_PASSWORD = os.environ["VAULT_PASSWORD"]
+REMOTE_REPOSITORY = os.environ["REMOTE_REPOSITORY"]
+REPOSITORY_BRANCH = os.getenv("REPOSITORY_BRANCH", "master")
+LOCAL_REPOSITORY = os.getenv("LOCAL_REPOSITORY", "resources/portainers")
 
 
 def dev():

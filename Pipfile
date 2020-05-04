@@ -21,6 +21,7 @@ validators = "*"
 jsonschema = "*"
 requests = "*"
 ansible-vault = "*"
+gitpython = "*"
 
 [dev-packages]
 rope = "*"
