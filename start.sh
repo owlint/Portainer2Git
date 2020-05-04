@@ -16,4 +16,4 @@ fi
 git config --global user.email "$GIT_EMAIL"
 git config --global user.name "$GIT_USERNAME"
 
-gunicorn --bind=0.0.0.0:5000 app
+gunicorn --bind=0.0.0.0:5000 wsgi

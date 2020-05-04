@@ -1,4 +1,4 @@
-from app import application
+from app import create_app
 import falcon
 from falcon import testing
 import pytest
@@ -7,7 +7,7 @@ from uuid import uuid4
 
 @pytest.fixture
 def client():
-    return testing.TestClient(application)
+    return testing.TestClient(create_app())
 
 
 def test_create_portainer(client):

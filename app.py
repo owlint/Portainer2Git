@@ -108,11 +108,12 @@ def initialize_repository():
         Services.git().clone_repo()
 
 
-check_requirements()
-migrate.apply()
-seed.apply()
-projections = instantiate_projections()
-domain_event_listeners = instantiate_domain_event_listeners()
-initialize_repository()
-app_scheduler = instantiate_app_scheduler()
-application = create_app()
+if __name__ == "__main__":
+    check_requirements()
+    migrate.apply()
+    seed.apply()
+    projections = instantiate_projections()
+    domain_event_listeners = instantiate_domain_event_listeners()
+    initialize_repository()
+    app_scheduler = instantiate_app_scheduler()
+    application = create_app()
