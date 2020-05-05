@@ -4,6 +4,7 @@ activity.log
 .vscode
 .env
 resources/portainers
+docker-compose.local.yml
 
 celerybeat-schedule
 ghostdriver.log
