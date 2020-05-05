@@ -86,8 +86,8 @@ services:
 Here is a quick tour of the available configuration variables :
 
 * `mongo`: Mongodb host
-* `mongo_username`: Username to connect to mongodb. **Must be absent** if no authentication is requires
-* `mongo_password`: Password to connect to mongodb. **Must be absent** if no authentication is requires
+* `mongo_username`: Username to connect to mongodb. **Must be absent** if no authentication is required
+* `mongo_password`: Password to connect to mongodb. **Must be absent** if no authentication is required
 * `NEXT_CHECK_INTERVAL`: Delay (in seconds) between two executions of portainer instances checking. Default to 30.
 * `PORTAINER_VALIDITY_TIMEOUT`: Delay (in seconds) before a portainer instance need to be saved again. Default to 120
 * `GIT_USERNAME`: Username of Git user (as needed by `git config`). Default to ops
