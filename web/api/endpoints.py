@@ -1,56 +1,83 @@
-# Third Party
-from flask_restful import Resource, reqparse
+from falcon.media.validators import jsonschema
 from infrastructure.application_services.application_services import (
     ApplicationServices,
 )
-from infrastructure.services.services import Services
+import falcon
 
 
-class CreateUser(Resource):
-    def __init__(self):
-        super().__init__()
+class Healthcheck:
+    def on_get(self, _, resp):
+        resp.media = {"success": True}
 
-        self.parser = reqparse.RequestParser()
-        self.parser.add_argument(
-            "first_name", type=str, location="json", required=True
-        )
-        self.parser.add_argument(
-            "last_name", type=str, location="json", required=True
-        )
-        self.parser.add_argument(
-            "email", type=str, location="json", required=True
-        )
-        self.parser.add_argument(
-            "password", type=str, location="json", required=True
-        )
-        self.parser.add_argument(
-            "is_admin", type=bool, location="json", required=True
-        )
 
-    def post(self):
-        args = self.parser.parse_args()
+class CreatePortainer:
 
+    post_schema = {
+        "type": "object",
+        "properties": {
+            "name": {"type": "string"},
+            "endpoint": {"type": "string"},
+            "username": {"type": "string"},
+            "password": {"type": "string"},
+        },
+        "required": ["name", "endpoint", "username", "password"],
+    }
+
+    @jsonschema.validate(post_schema)
+    def on_post(self, req, resp):
+        data = req.media
         try:
-            user_id = self.create_user(args)
-            Services.logger().info(
-                f"New user with email {args['email']} created"
+            portainer_id = ApplicationServices.portainer().create_portainer(
+                data["name"],
+                data["endpoint"],
+                data["username"],
+                data["password"],
             )
-            return {"user_id": user_id}
-        except ValueError:
-            Services.logger().warning(
-                f"Try to create already existing user with "
-                f"email {args['email']}"
-            )
-            return {"message": "This user already exists"}, 501
-        except Exception as ex:
-            return {"message": ex.message}, 500
+            resp.media = {"portainer_id": portainer_id}
+        except ValueError as e:
+            resp.media = {"success": False, "message": f"{e}"}
+            resp.status = falcon.HTTP_501
 
-    def create_user(self, args):
-        user_application_service = ApplicationServices.user()
-        return user_application_service.create_user(
-            args["first_name"],
-            args["last_name"],
-            args["email"],
-            args["password"],
-            args["is_admin"],
-        )
+
+class CreateStack:
+    post_schema = {
+        "type": "object",
+        "properties": {
+            "portainer_id": {"type": "string"},
+            "stack_name": {"type": "string"},
+        },
+        "required": ["portainer_id", "stack_name"],
+    }
+
+    @jsonschema.validate(post_schema)
+    def on_post(self, req, resp):
+        data = req.media
+        try:
+            ApplicationServices.portainer().add_stack(
+                data["portainer_id"], data["stack_name"]
+            )
+        except ValueError as e:
+            resp.media = {"success": False, "message": f"{e}"}
+            resp.status = falcon.HTTP_501
+
+
+class RemoveStack:
+    post_schema = {
+        "type": "object",
+        "properties": {
+            "portainer_id": {"type": "string"},
+            "stack_name": {"type": "string"},
+        },
+        "required": ["portainer_id", "stack_name"],
+    }
+
+    @jsonschema.validate(post_schema)
+    def on_post(self, req, resp):
+        data = req.media
+        try:
+            ApplicationServices.portainer().remove_stack(
+                data["portainer_id"], data["stack_name"]
+            )
+        except ValueError as e:
+            resp.media = {"success": False, "message": f"{e}"}
+            resp.status = falcon.HTTP_501

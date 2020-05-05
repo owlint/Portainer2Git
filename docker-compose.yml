@@ -5,3 +5,23 @@ services:
     image: mongo
     ports:
       - 27017:27017
+
+  app:
+    build:
+      context: .
+    ports:
+      - 5000:5000
+    environment:
+      mongo: mongo
+      # mongo_username: mongo
+      # mongo_password: mongo
+      NEXT_CHECK_INTERVAL: 30
+      PORTAINER_VALIDITY_TIMEOUT: 120
+      GIT_USERNAME: ops
+      GIT_EMAIL: ops@compagny.com
+      VAULT_PASSWORD: random
+      REMOTE_REPOSITORY: git@github.com:lauevrar77/changeme.git
+      REPOSITORY_BRANCH: master
+      LOCAL_REPOSITORY: resources/portainers
+      SSH_KEY: >
+        -----BEGIN RSA PRIVATE KEY-----\nSSH\nKEY\nLINES\n-----END RSA PRIVATE KEY-----\n

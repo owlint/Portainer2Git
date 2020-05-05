@@ -1,17 +1,18 @@
 from app import (
-    create_app,
     check_requirements,
-    instantiate_projections,
+    instantiate_app_scheduler,
     instantiate_domain_event_listeners,
+    instantiate_projections,
+    initialize_repository,
+    create_app
 )
-from pygrate import migrate, seed
+from pygrate import seed, migrate
 
 check_requirements()
 migrate.apply()
 seed.apply()
 projections = instantiate_projections()
 domain_event_listeners = instantiate_domain_event_listeners()
+initialize_repository()
+app_scheduler = instantiate_app_scheduler()
 application = create_app()
-
-if __name__ == "__main__":
-    application.run(host="0.0.0.0", port=5000)

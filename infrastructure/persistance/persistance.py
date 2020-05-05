@@ -2,13 +2,19 @@
 from dependency_injector import containers, providers
 
 # Application
-from infrastructure.persistance.projections.ExampleProjection import (
-    ExampleProjection,
+from infrastructure.persistance.projections.PortainerNameProjection import (
+    PortainerNameProjection,
 )
-from infrastructure.persistance.repositories.UserRepository import (
-    UserRepository,
+from infrastructure.persistance.projections.PortainerCheckTimeProjection import (
+    PortainerCheckTimeProjection,
 )
-from infrastructure.persistance.views.ExampleView import ExampleView
+from infrastructure.persistance.repositories.PortainerRepository import (
+    PortainerRepository,
+)
+from infrastructure.persistance.views.PortainerNameView import PortainerNameView
+from infrastructure.persistance.views.PortainerCheckTimeView import (
+    PortainerCheckTimeView,
+)
 from infrastructure.services.services import Services
 
 
@@ -16,18 +22,28 @@ class Persistance(containers.DeclarativeContainer):
     """Application IoC container."""
 
     # Repositories
-    user_repository = providers.Factory(UserRepository, Services.mongo_client)
+    portainer_repository = providers.Factory(
+        PortainerRepository, Services.mongo_client
+    )
 
     # Projections
-    example_projection = providers.Singleton(
-        ExampleProjection,
+    portainer_name_projection = providers.Singleton(
+        PortainerNameProjection,
+        Services.mongo_client,
+        Services.domain_event_publisher,
+    )
+    portainer_check_time_projection = providers.Singleton(
+        PortainerCheckTimeProjection,
         Services.mongo_client,
         Services.domain_event_publisher,
     )
 
-    projections = [example_projection]
+    projections = [portainer_name_projection, portainer_check_time_projection]
 
     # Views
-    user_credentials_view = providers.Factory(
-        ExampleView, Services.mongo_client
+    portainer_name_view = providers.Factory(
+        PortainerNameView, Services.mongo_client
+    )
+    portainer_check_time_view = providers.Factory(
+        PortainerCheckTimeView, Services.mongo_client
     )

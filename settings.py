@@ -4,12 +4,12 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-PASSWORD_RECOVERY_EMAIL_TEMPLATE = os.getenv(
-    "PASSWORD_RECOVERY_EMAIL_TEMPLATE", "password_recovery"
-)
-PASSWORD_RECOVERY_FRONT_URL = os.getenv(
-    "PASSWORD_RECOVERY_FRONT_URL", "https://graphboard.owl-int.com/recovery"
-)
+NEXT_CHECK_INTERVAL = int(os.getenv("NEXT_CHECK_INTERVAL", 30))
+PORTAINER_VALIDITY_TIMEOUT = int(os.getenv("PORTAINER_VALIDITY_TIMEOUT", 120))
+VAULT_PASSWORD = os.environ["VAULT_PASSWORD"]
+REMOTE_REPOSITORY = os.environ["REMOTE_REPOSITORY"]
+REPOSITORY_BRANCH = os.getenv("REPOSITORY_BRANCH", "master")
+LOCAL_REPOSITORY = os.getenv("LOCAL_REPOSITORY", "resources/portainers")
 
 
 def dev():
@@ -30,15 +30,3 @@ def mongo_username():
 
 def mongo_password():
     return os.getenv("mongo_password", None)
-
-
-def redis_url():
-    return os.getenv("redis", "localhost")
-
-
-def redis_password():
-    return os.getenv("redis_password", None)
-
-
-def redis_database():
-    return int(os.getenv("redis_database", "0"))
